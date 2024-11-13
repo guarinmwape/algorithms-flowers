@@ -1,0 +1,72 @@
+import java.util.Arrays;
+
+public class FlowerSorter {
+    public static void main(String[] args) {
+        String[] flowers = {"purple", "black", "white", "purple", "white", "black"};
+        System.out.println("Original: " + Arrays.toString(flowers));
+        sortFlowers(flowers);
+        System.out.println("Sorted: " + Arrays.toString(flowers));
+    }
+    public static void sortFlowers(String[] flowers) {
+        int[] flowerCodes = new int[flowers.length];
+        for (int i = 0; i < flowers.length; i++) {
+            flowerCodes[i] = colorToCode(flowers[i]);
+        }
+        mergeSort(flowerCodes, 0, flowerCodes.length - 1);
+        for (int i = 0; i < flowerCodes.length; i++) {
+            flowers[i] = codeToColor(flowerCodes[i]);
+        }
+    }
+    private static void mergeSort(int[] array, int left, int right) {
+        if (left < right) {
+            int middle = (left + right) / 2;
+            mergeSort(array, left, middle);
+            mergeSort(array, middle + 1, right);
+            merge(array, left, middle, right);
+        }
+    }
+
+    private static void merge(int[] array, int left, int middle, int right) {
+        int[] leftArray = Arrays.copyOfRange(array, left, middle + 1);
+        int[] rightArray = Arrays.copyOfRange(array, middle + 1, right + 1);
+
+        int i = 0, j = 0, k = left;
+        while (i < leftArray.length && j < rightArray.length) {
+            if (leftArray[i] <= rightArray[j]) {
+                array[k++] = leftArray[i++];
+            } else {
+                array[k++] = rightArray[j++];
+            }
+        }
+        while (i < leftArray.length) {
+            array[k++] = leftArray[i++];
+        }
+        while (j < rightArray.length) {
+            array[k++] = rightArray[j++];
+        }
+    }
+    private static int colorToCode(String color) {
+        switch (color) {
+            case "black":
+                return 1;
+            case "white":
+                return 2;
+            case "purple":
+                return 3;
+            default:
+                throw new IllegalArgumentException("Unknown color: " + color);
+        }
+    }
+    private static String codeToColor(int code) {
+        switch (code) {
+            case 1:
+                return "black";
+            case 2:
+                return "white";
+            case 3:
+                return "purple";
+            default:
+                throw new IllegalArgumentException("Unknown code: " + code);
+        }
+    }
+}
